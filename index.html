@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>3Drives - Monitoring</title>
+    <link rel="icon" type="image/png" href="logo2.png">
+
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #121212;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* ── HEADER ── */
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+            gap: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-grow: 1;
+        }
+
+        .header-logo {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+        }
+
+        /* ── TICKER ── */
+        .ticker-wrapper {
+            flex-grow: 1;
+        }
+
+        /* ── NAVIGATION + HORLOGES ── */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-shrink: 0;
+        }
+
+        /* ── BOUTONS ── */
+        .nav-btn {
+            background: transparent;
+            border: 1px solid #f0b90b;
+            color: #f0b90b;
+            padding: 6px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.82em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background 0.2s, color 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover,
+        .nav-btn.active-panel {
+            background: #f0b90b;
+            color: #121212;
+        }
+
+        /* ── HORLOGES + SESSIONS (bloc droit) ── */
+        .clocks-sessions-block {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        /* ── HORLOGES ── */
+        .clocks-container {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .clock-item {
+            text-align: center;
+        }
+
+        .clock-label {
+            font-size: 0.7em;
+            color: #888;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 2px;
+            font-weight: bold;
+        }
+
+        .clock-time {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.15em;
+            color: #f0b90b;
+            font-weight: bold;
+        }
+
+        /* ── SESSIONS DE MARCHE ── */
+        .sessions-bar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .session-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .session-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            transition: background 0.5s;
+        }
+
+        .session-dot.active {
+            background: #26a17b;
+            box-shadow: 0 0 6px rgba(38, 161, 123, 0.7);
+        }
+
+        .session-dot.overlap {
+            background: #f0b90b;
+            box-shadow: 0 0 6px rgba(240, 185, 11, 0.7);
+        }
+
+        .session-dot.closed {
+            background: #333;
+        }
+
+        .session-name {
+            font-size: 0.85em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .session-name.active {
+            color: #26a17b;
+        }
+
+        .session-name.overlap {
+            color: #f0b90b;
+        }
+
+        .session-name.closed {
+            color: #444;
+        }
+
+        .session-separator {
+            color: #333;
+            font-size: 0.85em;
+        }
+
+        .session-countdown {
+            font-size: 0.95em;
+            color: #e84142;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .session-countdown span {
+            color: #e84142;
+            font-weight: bold;
+        }
+
+        /* ── GRILLE WATCHLIST ── */
+        .grid-watchlist {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            flex-grow: 1;
+        }
+
+        /* ── CONTENEUR ANALYSE ── */
+        .analyse-body {
+            display: flex;
+            gap: 15px;
+            flex-grow: 1;
+        }
+
+        /* ── GRILLE ANALYSE 2x2 ── */
+        .grid-analyse {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        /* ── CARTE GRAPHIQUE ── */
+        .chart-card {
+            background: #1e1e1e;
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            min-height: 380px;
+            border: 1px solid #2a2a2a;
+        }
+
+        h3 {
+            margin: 0 0 10px 0;
+            border-left: 4px solid #f0b90b;
+            padding-left: 10px;
+            font-size: 0.9em;
+            color: #ccc;
+        }
+
+        .tv-container {
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        /* ── PAGES ── */
+        .page {
+            display: none;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        /* ══════════════════════════════════════
+           PANNEAU GENERIQUE (Cal-Eco + News)
+        ══════════════════════════════════════ */
+        .side-panel {
+            display: none;
+            flex-direction: column;
+            width: 420px;
+            flex-shrink: 0;
+            background: #1e1e1e;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            padding: 14px;
+            overflow-y: auto;
+            max-height: calc(100vh - 120px);
+            box-sizing: border-box;
+        }
+
+        .side-panel.open {
+            display: flex;
+        }
+
+        /* ── EN-TETE PANNEAU ── */
+        .panel-header {
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .panel-title-block {
+            flex-shrink: 0;
+        }
+
+        .panel-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #f0b90b;
+            letter-spacing: 2px;
+        }
+
+        .panel-subtitle {
+            font-size: 0.74em;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        /* ── BOUTON REFRESH ── */
+        .refresh-btn {
+            background: transparent;
+            border: 1px solid #333;
+            color: #666;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.78em;
+            transition: border-color 0.2s, color 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .refresh-btn:hover {
+            border-color: #f0b90b;
+            color: #f0b90b;
+        }
+
+        /* ══════════════════════════════
+           CALENDRIER
+        ══════════════════════════════ */
+        .cal-week-num {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #f0b90b;
+            letter-spacing: 2px;
+        }
+
+        .cal-week-range {
+            font-size: 0.74em;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        /* ══════════════════════════════
+           NEWS — FILTRES PAR ACTIF
+        ══════════════════════════════ */
+        .news-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid #333;
+            color: #888;
+            padding: 3px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.72em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .filter-btn:hover {
+            border-color: #666;
+            color: #ccc;
+        }
+
+        .filter-btn.active {
+            color: #121212;
+            border-color: transparent;
+        }
+
+        /* Couleurs par actif */
+        .filter-btn.f-all.active {
+            background: #f0b90b;
+        }
+
+        .filter-btn.f-nq.active {
+            background: #4a9eff;
+        }
+
+        .filter-btn.f-gold.active {
+            background: #FFD700;
+            color: #333;
+        }
+
+        .filter-btn.f-btc.active {
+            background: #F7931A;
+        }
+
+        .filter-btn.f-sp500.active {
+            background: #26a17b;
+        }
+
+        .filter-btn.f-eur.active {
+            background: #a78bfa;
+        }
+
+        .filter-btn.f-oil.active {
+            background: #94a3b8;
+            color: #333;
+        }
+
+        /* ── CARTE NEWS ── */
+        .news-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .news-card {
+            background: #181818;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+            text-decoration: none;
+            display: block;
+        }
+
+        .news-card:hover {
+            background: #222;
+            border-color: #3a3a3a;
+        }
+
+        .news-card-top {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        /* Badge actif */
+        .asset-badge {
+            font-size: 0.65em;
+            font-weight: bold;
+            padding: 2px 7px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+
+        .badge-nq {
+            background: #1a3a5c;
+            color: #4a9eff;
+        }
+
+        .badge-gold {
+            background: #3a3000;
+            color: #FFD700;
+        }
+
+        .badge-btc {
+            background: #3a2000;
+            color: #F7931A;
+        }
+
+        .badge-sp500 {
+            background: #0d2e22;
+            color: #26a17b;
+        }
+
+        .badge-eur {
+            background: #2d1f4e;
+            color: #a78bfa;
+        }
+
+        .badge-oil {
+            background: #1e2530;
+            color: #94a3b8;
+        }
+
+        .news-meta {
+            font-size: 0.72em;
+            color: #555;
+            margin-left: auto;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .news-title {
+            font-size: 0.83em;
+            color: #ddd;
+            line-height: 1.4;
+            margin-bottom: 4px;
+        }
+
+        .news-source {
+            font-size: 0.7em;
+            color: #555;
+        }
+
+        /* ── ETATS PANNEAU ── */
+        .panel-status {
+            color: #888;
+            font-size: 0.82em;
+            text-align: center;
+            padding: 24px 0;
+            line-height: 1.6;
+        }
+
+        .panel-status.error {
+            color: #e84142;
+        }
+
+        /* ── SPINNER ── */
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #333;
+            border-top-color: #f0b90b;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ════════════════════════════════
+         PAGE 1 — WATCHLIST
+    ════════════════════════════════ -->
+    <div id="page-watchlist" class="page active">
+
+        <div class="header-container">
+            <div class="header-left">
+                <img src="logo2.png" alt="Logo 3Drives" class="header-logo">
+                <div class="ticker-wrapper">
+                    <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-ticker-tape.js"></script>
+                    <tv-ticker-tape
+                        symbols="FOREXCOM:SPXUSD,FOREXCOM:NSXUSD,FX:EURUSD,BITSTAMP:BTCUSD,CMCMARKETS:GOLD,CAPITALCOM:OIL_BRENT,CAPITALCOM:DXY"
+                        show-hover theme="dark" transparent></tv-ticker-tape>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <button class="nav-btn" onclick="showPage('analyse')">Analyse</button>
+                <div class="clocks-sessions-block">
+                    <div class="clocks-container">
+                        <div class="clock-item">
+                            <span class="clock-label">New York</span>
+                            <span id="w-ny-time" class="clock-time">00:00:00</span>
+                        </div>
+                        <div class="clock-item">
+                            <span class="clock-label">UTC</span>
+                            <span id="w-utc-time" class="clock-time">00:00:00</span>
+                        </div>
+                        <div class="clock-item">
+                            <span class="clock-label">Paris</span>
+                            <span id="w-paris-time" class="clock-time">00:00:00</span>
+                        </div>
+                        <div class="clock-item">
+                            <span class="clock-label">Tokyo</span>
+                            <span id="w-tokyo-time" class="clock-time">00:00:00</span>
+                        </div>
+                    </div>
+                    <div class="sessions-bar" id="w-sessions-bar">
+                        <div class="session-item">
+                            <div class="session-dot closed" id="w-dot-sydney"></div>
+                            <span class="session-name closed" id="w-name-sydney">SYD</span>
+                        </div>
+                        <div class="session-separator">|</div>
+                        <div class="session-item">
+                            <div class="session-dot closed" id="w-dot-tokyo"></div>
+                            <span class="session-name closed" id="w-name-tokyo">TKY</span>
+                        </div>
+                        <div class="session-separator">|</div>
+                        <div class="session-item">
+                            <div class="session-dot closed" id="w-dot-london"></div>
+                            <span class="session-name closed" id="w-name-london">LDN</span>
+                        </div>
+                        <div class="session-separator">|</div>
+                        <div class="session-item">
+                            <div class="session-dot closed" id="w-dot-newyork"></div>
+                            <span class="session-name closed" id="w-name-newyork">NY</span>
+                        </div>
+                        <div class="session-separator">|</div>
+                        <span class="session-countdown" id="w-countdown"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-watchlist">
+            <div class="chart-card">
+                <h3>Nasdaq - US100</h3>
+                <div id="chart_nq" class="tv-container"></div>
+            </div>
+            <div class="chart-card">
+                <h3>Gold (XAUUSD)</h3>
+                <div id="chart_gold" class="tv-container"></div>
+            </div>
+            <div class="chart-card">
+                <h3>Bitcoin (BTCUSD)</h3>
+                <div id="chart_btc" class="tv-container"></div>
+            </div>
+            <div class="chart-card">
+                <h3>S&P 500 - US500</h3>
+                <div id="chart_sp500" class="tv-container"></div>
+            </div>
+            <div class="chart-card">
+                <h3>Euro / Dollar (EURUSD)</h3>
+                <div id="chart_eurusd" class="tv-container"></div>
+            </div>
+            <div class="chart-card">
+                <h3>Oil Brent</h3>
+                <div id="chart_oil" class="tv-container"></div>
+            </div>
+        </div>
+
+    </div><!-- /page-watchlist -->
+
+
+    <!-- ════════════════════════════════
+         PAGE 2 — ANALYSE
+    ════════════════════════════════ -->
+    <div id="page-analyse" class="page">
+
+        <div class="header-container">
+            <div class="header-right" style="margin-left: auto;">
+                <button class="nav-btn" id="btn-news" onclick="toggleNews()">News</button>
+                <button class="nav-btn" id="btn-cal" onclick="toggleCalendrier()">Cal-Eco</button>
+                <button class="nav-btn" onclick="showPage('watchlist')">&#9664; Watchlist</button>
+                <div class="clocks-sessions-block">
+                    <div class="clocks-container">
+                        <div class="clock-item">
+                            <span class="clock-label">New York</span>
+                            <span id="a-ny-time" class="clock-time">00:00:00</span>
+                        </div>
+                        <div class="clock-item">
+                            <span class="clock-label">UTC</span>
+                            <span id="a-utc-time" class="clock-time">00:00:00</span>
+                        </div>
+                        <div class="clock-item">
+                            <span class="clock-label">Paris</span>
+                            <span id="a-paris-time" class="clock-time">00:00:00</span>
+                        </div>
+                        <div class="clock-item">
+                            <span class="clock-label">Tokyo</span>
+                            <span id="a-tokyo-time" class="clock-time">00:00:00</span>
+                        </div>
+                    </div>
+                    <div class="sessions-bar" id="a-sessions-bar">
+                        <div class="session-item">
+                            <div class="session-dot closed" id="a-dot-sydney"></div>
+                            <span class="session-name closed" id="a-name-sydney">SYD</span>
+                        </div>
+                        <div class="session-separator">|</div>
+                        <div class="session-item">
+                            <div class="session-dot closed" id="a-dot-tokyo"></div>
+                            <span class="session-name closed" id="a-name-tokyo">TKY</span>
+                        </div>
+                        <div class="session-separator">|</div>
+                        <div class="session-item">
+                            <div class="session-dot closed" id="a-dot-london"></div>
+                            <span class="session-name closed" id="a-name-london">LDN</span>
+                        </div>
+                        <div class="session-separator">|</div>
+                        <div class="session-item">
+                            <div class="session-dot closed" id="a-dot-newyork"></div>
+                            <span class="session-name closed" id="a-name-newyork">NY</span>
+                        </div>
+                        <div class="session-separator">|</div>
+                        <span class="session-countdown" id="a-countdown"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="analyse-body">
+
+            <!-- Charts 2x2 -->
+            <div class="grid-analyse">
+                <div class="chart-card">
+                    <h3>US100 — Weekly</h3>
+                    <div id="chart_nq_w" class="tv-container"></div>
+                </div>
+                <div class="chart-card">
+                    <h3>US100 — Daily</h3>
+                    <div id="chart_nq_d" class="tv-container"></div>
+                </div>
+                <div class="chart-card">
+                    <h3>US100 — H4</h3>
+                    <div id="chart_nq_h4" class="tv-container"></div>
+                </div>
+                <div class="chart-card">
+                    <h3>US100 — H1</h3>
+                    <div id="chart_nq_h1" class="tv-container"></div>
+                </div>
+            </div>
+
+            <!-- ── PANNEAU CAL-ECO ── -->
+            <div class="side-panel" id="cal-panel">
+                <div class="panel-header">
+                    <div class="panel-title-block">
+                        <div class="cal-week-num" id="cal-week-num">W--</div>
+                        <div class="cal-week-range" id="cal-week-range"></div>
+                    </div>
+                </div>
+                <div id="cal-content" style="flex-grow:1; min-height:0;">
+                    <div class="tradingview-widget-container" style="height:100%; min-height:500px;">
+                        <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+                        <script type="text/javascript"
+                            src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+                                {
+                                    "colorTheme": "dark",
+                                        "isTransparent": true,
+                                            "width": "100%",
+                                                "height": "100%",
+                                                    "locale": "fr",
+                                                        "importanceFilter": "3",
+                                                            "currencyFilter": "USD",
+                                                                "timezone": "America/New_York"
+                                }
+                            </script>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── PANNEAU NEWS ── -->
+            <div class="side-panel" id="news-panel">
+                <div class="panel-header">
+                    <div class="panel-title-block">
+                        <div class="panel-title">NEWS</div>
+                        <div class="panel-subtitle" id="news-subtitle">Actualites des 6 actifs</div>
+                    </div>
+                    <button class="refresh-btn" onclick="refreshNews()">&#8635; Actualiser</button>
+                </div>
+
+                <!-- Filtres par actif -->
+                <div class="news-filters">
+                    <button class="filter-btn f-all active" onclick="filterNews('all', this)">Tous</button>
+                    <button class="filter-btn f-nq" onclick="filterNews('nq', this)">NQ</button>
+                    <button class="filter-btn f-gold" onclick="filterNews('gold', this)">Gold</button>
+                    <button class="filter-btn f-btc" onclick="filterNews('btc', this)">BTC</button>
+                    <button class="filter-btn f-sp500" onclick="filterNews('sp500', this)">SP500</button>
+                    <button class="filter-btn f-eur" onclick="filterNews('eur', this)">EUR</button>
+                    <button class="filter-btn f-oil" onclick="filterNews('oil', this)">Oil</button>
+                </div>
+
+                <div id="news-content">
+                    <div class="panel-status">Cliquez sur News pour charger...</div>
+                </div>
+            </div>
+
+        </div>
+
+    </div><!-- /page-analyse -->
+
+
+    <!-- ════════════════════════════════
+         SCRIPTS
+    ════════════════════════════════ -->
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script>
+
+        const FINNHUB_KEY = 'd6reej9r01qr194mco60d6reej9r01qr194mco6g';
+
+        /* ══════════════════════════════
+           HORLOGES
+        ══════════════════════════════ */
+        function updateClocks() {
+            const opt = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            const fmt = (tz) => new Date().toLocaleTimeString('fr-FR', { ...opt, timeZone: tz });
+
+            document.getElementById('w-ny-time').textContent = fmt('America/New_York');
+            document.getElementById('w-utc-time').textContent = fmt('UTC');
+            document.getElementById('w-paris-time').textContent = fmt('Europe/Paris');
+            document.getElementById('w-tokyo-time').textContent = fmt('Asia/Tokyo');
+
+            document.getElementById('a-ny-time').textContent = fmt('America/New_York');
+            document.getElementById('a-utc-time').textContent = fmt('UTC');
+            document.getElementById('a-paris-time').textContent = fmt('Europe/Paris');
+            document.getElementById('a-tokyo-time').textContent = fmt('Asia/Tokyo');
+
+            // Sessions — mise à jour chaque seconde
+            updateSessions('w-');
+            updateSessions('a-');
+        }
+
+        /* ══════════════════════════════
+           CHARTS TRADINGVIEW
+        ══════════════════════════════ */
+        function createChart(containerId, symbol, interval) {
+            new TradingView.widget({
+                "autosize": true,
+                "symbol": symbol,
+                "interval": interval,
+                "timezone": "America/New_York",
+                "theme": "dark",
+                "style": "1",
+                "locale": "fr",
+                "hide_top_toolbar": true,
+                "hide_legend": false,
+                "container_id": containerId,
+                "hide_volume": true
+            });
+        }
+
+        const chartsCreated = { watchlist: false, analyse: false };
+
+        /* ══════════════════════════════
+           NAVIGATION PAGES
+        ══════════════════════════════ */
+        function showPage(page) {
+            document.getElementById('page-watchlist').classList.remove('active');
+            document.getElementById('page-analyse').classList.remove('active');
+            document.getElementById('page-' + page).classList.add('active');
+
+            if (page === 'analyse' && !chartsCreated.analyse) {
+                chartsCreated.analyse = true;
+                createChart("chart_nq_w", "CAPITALCOM:US100", "W");
+                createChart("chart_nq_d", "CAPITALCOM:US100", "D");
+                createChart("chart_nq_h4", "CAPITALCOM:US100", "240");
+                new TradingView.widget({
+                    "autosize": true,
+                    "symbol": "CAPITALCOM:US100",
+                    "interval": "60",
+                    "timezone": "America/New_York",
+                    "theme": "dark",
+                    "style": "1",
+                    "locale": "fr",
+                    "hide_top_toolbar": false,
+                    "hide_legend": false,
+                    "container_id": "chart_nq_h1",
+                    "hide_volume": true,
+                    "drawings_access": { "type": "all" }
+                });
+            }
+        }
+
+        /* ══════════════════════════════
+           TOGGLE CAL-ECO
+        ══════════════════════════════ */
+        let calLoaded = false;
+
+        function toggleCalendrier() {
+            const panel = document.getElementById('cal-panel');
+            const btn = document.getElementById('btn-cal');
+            const isOpen = panel.classList.contains('open');
+
+            // Fermer News si ouvert
+            fermerNews();
+
+            if (isOpen) {
+                panel.classList.remove('open');
+                btn.classList.remove('active-panel');
+            } else {
+                panel.classList.add('open');
+                btn.classList.add('active-panel');
+                if (!calLoaded) {
+                    afficherEnteteCalendrier();
+                    calLoaded = true;
+                }
+            }
+        }
+
+        function afficherEnteteCalendrier() {
+            const now = new Date();
+            const jour = now.getDay();
+            const diff = (jour === 0) ? -6 : 1 - jour;
+            const lundi = new Date(now);
+            lundi.setDate(now.getDate() + diff);
+            lundi.setHours(0, 0, 0, 0);
+            const dimanche = new Date(lundi);
+            dimanche.setDate(lundi.getDate() + 6);
+
+            const d = new Date(Date.UTC(lundi.getFullYear(), lundi.getMonth(), lundi.getDate()));
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            const wNum = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+
+            const fmt = (d) => d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('cal-week-num').textContent = 'W' + wNum;
+            document.getElementById('cal-week-range').textContent = 'Semaine du ' + fmt(lundi) + ' au ' + fmt(dimanche);
+        }
+
+        /* ══════════════════════════════
+           TOGGLE NEWS
+        ══════════════════════════════ */
+        let newsLoaded = false;
+        let allNewsData = [];   // toutes les news brutes
+        let activeFilter = 'all';
+        let newsRefreshTimer = null;
+
+        function toggleNews() {
+            const panel = document.getElementById('news-panel');
+            const btn = document.getElementById('btn-news');
+            const isOpen = panel.classList.contains('open');
+
+            // Fermer Cal-Eco si ouvert
+            fermerCalendrier();
+
+            if (isOpen) {
+                panel.classList.remove('open');
+                btn.classList.remove('active-panel');
+                clearInterval(newsRefreshTimer);
+            } else {
+                panel.classList.add('open');
+                btn.classList.add('active-panel');
+                if (!newsLoaded) {
+                    chargerNews();
+                    newsLoaded = true;
+                }
+                // Auto-refresh toutes les 5 minutes
+                newsRefreshTimer = setInterval(chargerNews, 5 * 60 * 1000);
+            }
+        }
+
+        function fermerNews() {
+            document.getElementById('news-panel').classList.remove('open');
+            document.getElementById('btn-news').classList.remove('active-panel');
+            clearInterval(newsRefreshTimer);
+        }
+
+        function fermerCalendrier() {
+            document.getElementById('cal-panel').classList.remove('open');
+            document.getElementById('btn-cal').classList.remove('active-panel');
+        }
+
+        function refreshNews() {
+            newsLoaded = true;
+            chargerNews();
+        }
+
+        /* ══════════════════════════════
+           CHARGEMENT NEWS FINNHUB
+        ══════════════════════════════ */
+
+        // Config des actifs : endpoint Finnhub + label + badge CSS
+        const ACTIFS = [
+            { key: 'nq', label: 'NQ', badge: 'badge-nq', type: 'category', cat: 'general', keywords: ['nasdaq', 'us100', 'ndx', 'tech', 's&p'] },
+            { key: 'gold', label: 'Gold', badge: 'badge-gold', type: 'category', cat: 'general', keywords: ['gold', 'xau', 'bullion', 'precious metal'] },
+            { key: 'btc', label: 'BTC', badge: 'badge-btc', type: 'category', cat: 'crypto', keywords: ['bitcoin', 'btc', 'crypto'] },
+            { key: 'sp500', label: 'SP500', badge: 'badge-sp500', type: 'category', cat: 'general', keywords: ['s&p 500', 'sp500', 'spx', 's&p500'] },
+            { key: 'eur', label: 'EUR', badge: 'badge-eur', type: 'category', cat: 'forex', keywords: ['euro', 'eurusd', 'eur/usd', 'eur usd', 'ecb', 'european'] },
+            { key: 'oil', label: 'Oil', badge: 'badge-oil', type: 'category', cat: 'general', keywords: ['oil', 'brent', 'crude', 'opec', 'wti', 'petroleum'] }
+        ];
+
+        async function chargerNews() {
+            const contentEl = document.getElementById('news-content');
+            contentEl.innerHTML = '<div class="panel-status"><span class="spinner"></span> Chargement des news...</div>';
+
+            try {
+                // 3 appels : general, forex, crypto
+                const categories = ['general', 'forex', 'crypto'];
+                const promises = categories.map(cat =>
+                    fetch('https://finnhub.io/api/v1/news?category=' + cat + '&token=' + FINNHUB_KEY)
+                        .then(r => r.ok ? r.json() : [])
+                        .catch(() => [])
+                );
+
+                const results = await Promise.all(promises);
+                const rawAll = results.flat();
+
+                // Déduplication par ID ou headline
+                const seen = new Set();
+                const deduped = rawAll.filter(n => {
+                    const key = n.id || n.headline;
+                    if (seen.has(key)) return false;
+                    seen.add(key);
+                    return true;
+                });
+
+                // Taguer chaque news avec les actifs correspondants
+                const tagged = [];
+                deduped.forEach(n => {
+                    const text = ((n.headline || '') + ' ' + (n.summary || '') + ' ' + (n.category || '')).toLowerCase();
+                    const matchedKeys = [];
+                    ACTIFS.forEach(actif => {
+                        if (actif.keywords.some(kw => text.includes(kw))) {
+                            matchedKeys.push(actif.key);
+                        }
+                    });
+                    if (matchedKeys.length > 0) {
+                        tagged.push({ ...n, assetKeys: matchedKeys });
+                    }
+                });
+
+                // Trier par date décroissante
+                tagged.sort((a, b) => b.datetime - a.datetime);
+
+                // Garder max 60 news
+                allNewsData = tagged.slice(0, 60);
+
+                // Mettre à jour le sous-titre
+                const now = new Date();
+                document.getElementById('news-subtitle').textContent =
+                    'Mis à jour à ' + now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' }) + ' NY';
+
+                afficherNews(activeFilter);
+
+            } catch (err) {
+                contentEl.innerHTML = '<div class="panel-status error">Erreur de chargement.<br><small>' + err.message + '</small></div>';
+            }
+        }
+
+        /* ══════════════════════════════
+           AFFICHAGE + FILTRE NEWS
+        ══════════════════════════════ */
+        function filterNews(key, btnEl) {
+            activeFilter = key;
+            // Mise à jour visuelle des boutons
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btnEl.classList.add('active');
+            afficherNews(key);
+        }
+
+        function afficherNews(filter) {
+            const contentEl = document.getElementById('news-content');
+
+            const filtered = filter === 'all'
+                ? allNewsData
+                : allNewsData.filter(n => n.assetKeys.includes(filter));
+
+            if (filtered.length === 0) {
+                contentEl.innerHTML = '<div class="panel-status">Aucune actualite pour cet actif.</div>';
+                return;
+            }
+
+            let html = '<div class="news-list">';
+
+            filtered.forEach(n => {
+                const ts = new Date(n.datetime * 1000);
+                const jours = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+                const dateCourt = jours[ts.getDay()] + ' ' + ts.getDate();
+                const heureNY = ts.toLocaleTimeString('fr-FR', {
+                    hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/New_York'
+                });
+
+                // Badges des actifs associés (max 2)
+                const badges = n.assetKeys.slice(0, 2).map(key => {
+                    const actif = ACTIFS.find(a => a.key === key);
+                    return '<span class="asset-badge ' + actif.badge + '">' + actif.label + '</span>';
+                }).join('');
+
+                const source = n.source || '';
+                const titre = (n.headline || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                const url = n.url || '#';
+
+                html += '<a class="news-card" href="' + url + '" target="_blank" rel="noopener">'
+                    + '<div class="news-card-top">'
+                    + badges
+                    + '<span class="news-meta">' + dateCourt + ' &nbsp;|&nbsp; ' + heureNY + ' NY</span>'
+                    + '</div>'
+                    + '<div class="news-title">' + titre + '</div>'
+                    + (source ? '<div class="news-source">&#9642; ' + source + '</div>' : '')
+                    + '</a>';
+            });
+
+            html += '</div>';
+            contentEl.innerHTML = html;
+        }
+
+        /* ══════════════════════════════
+           SESSIONS DE MARCHE
+        ══════════════════════════════ */
+
+        // Horaires UTC (minutes depuis minuit)
+        const SESSIONS = [
+            { key: 'sydney', label: 'SYD', open: 22 * 60, close: 31 * 60 },  // 22:00 -> 07:00 (+1j)
+            { key: 'tokyo', label: 'TKY', open: 0 * 60, close: 9 * 60 },  // 00:00 -> 09:00
+            { key: 'london', label: 'LDN', open: 8 * 60, close: 17 * 60 },  // 08:00 -> 17:00
+            { key: 'newyork', label: 'NY', open: 13 * 60, close: 22 * 60 }   // 13:00 -> 22:00
+        ];
+
+        // Overlap London/NY : 13:00 -> 17:00 UTC
+        const OVERLAP = { open: 13 * 60, close: 17 * 60 };
+
+        function getUTCSeconds() {
+            const now = new Date();
+            return now.getUTCHours() * 3600 + now.getUTCMinutes() * 60 + now.getUTCSeconds();
+        }
+
+        function getUTCMinutes() {
+            const now = new Date();
+            return now.getUTCHours() * 60 + now.getUTCMinutes();
+        }
+
+        function isSessionActive(session, utcMin) {
+            if (session.open > session.close) {
+                return utcMin >= session.open || utcMin < session.close;
+            }
+            return utcMin >= session.open && utcMin < session.close;
+        }
+
+        function isOverlap(utcMin) {
+            return utcMin >= OVERLAP.open && utcMin < OVERLAP.close;
+        }
+
+        function formatCountdownSec(totalSeconds) {
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+            return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+        }
+
+        function updateSessions(prefix) {
+            const utcMin = getUTCMinutes();
+            const utcSec = getUTCSeconds();
+            const overlap = isOverlap(utcMin);
+
+            SESSIONS.forEach(s => {
+                const active = isSessionActive(s, utcMin);
+                const dot = document.getElementById(prefix + 'dot-' + s.key);
+                const name = document.getElementById(prefix + 'name-' + s.key);
+                if (!dot || !name) return;
+
+                dot.className = 'session-dot';
+                name.className = 'session-name';
+
+                if (active && overlap && (s.key === 'london' || s.key === 'newyork')) {
+                    dot.classList.add('overlap');
+                    name.classList.add('overlap');
+                } else if (active) {
+                    dot.classList.add('active');
+                    name.classList.add('active');
+                } else {
+                    dot.classList.add('closed');
+                    name.classList.add('closed');
+                }
+            });
+
+            // Compte à rebours en secondes
+            const cdEl = document.getElementById(prefix + 'countdown');
+            if (!cdEl) return;
+
+            let minDiffSec = Infinity;
+            let nextName = '';
+            SESSIONS.forEach(s => {
+                if (!isSessionActive(s, utcMin)) {
+                    const openSec = s.open * 60;
+                    let diff = openSec - utcSec;
+                    if (diff <= 0) diff += 24 * 3600;
+                    if (diff < minDiffSec) {
+                        minDiffSec = diff;
+                        nextName = s.label;
+                    }
+                }
+            });
+
+            if (nextName) {
+                cdEl.innerHTML = '<span>' + nextName + ':</span> ' + formatCountdownSec(minDiffSec);
+            } else {
+                cdEl.innerHTML = '<span>Overlap</span> LDN/NY';
+            }
+        }
+
+        /* ══════════════════════════════
+           INIT
+        ══════════════════════════════ */
+        window.onload = function () {
+            updateClocks();
+            setInterval(updateClocks, 1000);
+
+            chartsCreated.watchlist = true;
+            createChart("chart_nq", "CAPITALCOM:US100", "15");
+            createChart("chart_gold", "OANDA:XAUUSD", "15");
+            createChart("chart_btc", "COINBASE:BTCUSD", "15");
+            createChart("chart_sp500", "CAPITALCOM:US500", "15");
+            createChart("chart_eurusd", "CAPITALCOM:EURUSD", "15");
+            createChart("chart_oil", "CAPITALCOM:OIL_BRENT", "15");
+        };
+    </script>
+
+</body>
+
+</html>
