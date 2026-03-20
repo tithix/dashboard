@@ -180,9 +180,20 @@
             white-space: nowrap;
         }
 
-        .session-countdown span {
-            color: #e84142;
+        .session-nyopen {
+            font-size: 0.85em;
             font-weight: bold;
+            color: #f0b90b;
+            font-family: 'Courier New', monospace;
+            white-space: nowrap;
+            border-left: 1px solid #333;
+            padding-left: 14px;
+        }
+
+        .session-nyopen span {
+            color: #888;
+            font-weight: normal;
+            font-size: 0.9em;
         }
 
         /* ── GRILLE WATCHLIST ── */
@@ -560,26 +571,27 @@
                     </div>
                     <div class="sessions-bar" id="w-sessions-bar">
                         <div class="session-item">
-                            <div class="session-dot closed" id="w-dot-sydney"></div>
-                            <span class="session-name closed" id="w-name-sydney">SYD</span>
+                            <div class="session-dot closed" id="w-dot-c1"></div>
+                            <span class="session-name closed" id="w-name-c1">C1</span>
                         </div>
                         <div class="session-separator">|</div>
                         <div class="session-item">
-                            <div class="session-dot closed" id="w-dot-tokyo"></div>
-                            <span class="session-name closed" id="w-name-tokyo">TKY</span>
+                            <div class="session-dot closed" id="w-dot-c2"></div>
+                            <span class="session-name closed" id="w-name-c2">C2</span>
                         </div>
                         <div class="session-separator">|</div>
                         <div class="session-item">
-                            <div class="session-dot closed" id="w-dot-london"></div>
-                            <span class="session-name closed" id="w-name-london">LDN</span>
+                            <div class="session-dot closed" id="w-dot-c3"></div>
+                            <span class="session-name closed" id="w-name-c3">C3</span>
                         </div>
                         <div class="session-separator">|</div>
                         <div class="session-item">
-                            <div class="session-dot closed" id="w-dot-newyork"></div>
-                            <span class="session-name closed" id="w-name-newyork">NY</span>
+                            <div class="session-dot closed" id="w-dot-c4"></div>
+                            <span class="session-name closed" id="w-name-c4">C4</span>
                         </div>
                         <div class="session-separator">|</div>
                         <span class="session-countdown" id="w-countdown"></span>
+                        <span class="session-nyopen" id="w-nyopen"></span>
                     </div>
                 </div>
             </div>
@@ -646,26 +658,27 @@
                     </div>
                     <div class="sessions-bar" id="a-sessions-bar">
                         <div class="session-item">
-                            <div class="session-dot closed" id="a-dot-sydney"></div>
-                            <span class="session-name closed" id="a-name-sydney">SYD</span>
+                            <div class="session-dot closed" id="a-dot-c1"></div>
+                            <span class="session-name closed" id="a-name-c1">C1</span>
                         </div>
                         <div class="session-separator">|</div>
                         <div class="session-item">
-                            <div class="session-dot closed" id="a-dot-tokyo"></div>
-                            <span class="session-name closed" id="a-name-tokyo">TKY</span>
+                            <div class="session-dot closed" id="a-dot-c2"></div>
+                            <span class="session-name closed" id="a-name-c2">C2</span>
                         </div>
                         <div class="session-separator">|</div>
                         <div class="session-item">
-                            <div class="session-dot closed" id="a-dot-london"></div>
-                            <span class="session-name closed" id="a-name-london">LDN</span>
+                            <div class="session-dot closed" id="a-dot-c3"></div>
+                            <span class="session-name closed" id="a-name-c3">C3</span>
                         </div>
                         <div class="session-separator">|</div>
                         <div class="session-item">
-                            <div class="session-dot closed" id="a-dot-newyork"></div>
-                            <span class="session-name closed" id="a-name-newyork">NY</span>
+                            <div class="session-dot closed" id="a-dot-c4"></div>
+                            <span class="session-name closed" id="a-name-c4">C4</span>
                         </div>
                         <div class="session-separator">|</div>
                         <span class="session-countdown" id="a-countdown"></span>
+                        <span class="session-nyopen" id="a-nyopen"></span>
                     </div>
                 </div>
             </div>
@@ -1057,39 +1070,40 @@
         }
 
         /* ══════════════════════════════
-           SESSIONS DE MARCHE
+           SESSIONS DE MARCHE C1-C4
         ══════════════════════════════ */
 
-        // Horaires UTC (minutes depuis minuit)
+        // Créneaux en heure New York (minutes depuis minuit NY)
         const SESSIONS = [
-            { key: 'sydney', label: 'SYD', open: 22 * 60, close: 31 * 60 },  // 22:00 -> 07:00 (+1j)
-            { key: 'tokyo', label: 'TKY', open: 0 * 60, close: 9 * 60 },  // 00:00 -> 09:00
-            { key: 'london', label: 'LDN', open: 8 * 60, close: 17 * 60 },  // 08:00 -> 17:00
-            { key: 'newyork', label: 'NY', open: 13 * 60, close: 22 * 60 }   // 13:00 -> 22:00
+            { key: 'c1', label: 'C1', open: 18 * 60, close: 24 * 60 },  // 18:00 - 23:59 NY
+            { key: 'c2', label: 'C2', open: 0 * 60, close: 6 * 60 },  // 00:00 - 05:59 NY
+            { key: 'c3', label: 'C3', open: 6 * 60, close: 12 * 60 },  // 06:00 - 11:59 NY
+            { key: 'c4', label: 'C4', open: 12 * 60, close: 18 * 60 }   // 12:00 - 17:59 NY
         ];
 
-        // Overlap London/NY : 13:00 -> 17:00 UTC
-        const OVERLAP = { open: 13 * 60, close: 17 * 60 };
-
-        function getUTCSeconds() {
+        function getNYTotalSeconds() {
             const now = new Date();
-            return now.getUTCHours() * 3600 + now.getUTCMinutes() * 60 + now.getUTCSeconds();
+            const nyStr = now.toLocaleString('en-US', {
+                timeZone: 'America/New_York',
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+            });
+            const p = nyStr.split(':');
+            return parseInt(p[0]) * 3600 + parseInt(p[1]) * 60 + parseInt(p[2]);
         }
 
-        function getUTCMinutes() {
+        function getNYTotalMinutes() {
             const now = new Date();
-            return now.getUTCHours() * 60 + now.getUTCMinutes();
+            const nyStr = now.toLocaleString('en-US', {
+                timeZone: 'America/New_York',
+                hour: '2-digit', minute: '2-digit', hour12: false
+            });
+            const p = nyStr.split(':');
+            return parseInt(p[0]) * 60 + parseInt(p[1]);
         }
 
-        function isSessionActive(session, utcMin) {
-            if (session.open > session.close) {
-                return utcMin >= session.open || utcMin < session.close;
-            }
-            return utcMin >= session.open && utcMin < session.close;
-        }
-
-        function isOverlap(utcMin) {
-            return utcMin >= OVERLAP.open && utcMin < OVERLAP.close;
+        function isSessionActive(session, nyMin) {
+            // C1 passe minuit : 18:00 -> 23:59 (pas de passage minuit, close = 1440)
+            return nyMin >= session.open && nyMin < session.close;
         }
 
         function formatCountdownSec(totalSeconds) {
@@ -1100,53 +1114,71 @@
         }
 
         function updateSessions(prefix) {
-            const utcMin = getUTCMinutes();
-            const utcSec = getUTCSeconds();
-            const overlap = isOverlap(utcMin);
+            const nyMin = getNYTotalMinutes();
+            const nySec = getNYTotalSeconds();
 
             SESSIONS.forEach(s => {
-                const active = isSessionActive(s, utcMin);
+                const active = isSessionActive(s, nyMin);
                 const dot = document.getElementById(prefix + 'dot-' + s.key);
                 const name = document.getElementById(prefix + 'name-' + s.key);
                 if (!dot || !name) return;
 
                 dot.className = 'session-dot';
                 name.className = 'session-name';
-
-                if (active && overlap && (s.key === 'london' || s.key === 'newyork')) {
-                    dot.classList.add('overlap');
-                    name.classList.add('overlap');
-                } else if (active) {
-                    dot.classList.add('active');
-                    name.classList.add('active');
-                } else {
-                    dot.classList.add('closed');
-                    name.classList.add('closed');
-                }
+                dot.classList.add(active ? 'active' : 'closed');
+                name.classList.add(active ? 'active' : 'closed');
             });
 
-            // Compte à rebours en secondes
+            // Compte à rebours vers la prochaine session
             const cdEl = document.getElementById(prefix + 'countdown');
             if (!cdEl) return;
 
             let minDiffSec = Infinity;
-            let nextName = '';
+            let nextLabel = '';
+
             SESSIONS.forEach(s => {
-                if (!isSessionActive(s, utcMin)) {
+                if (!isSessionActive(s, nyMin)) {
                     const openSec = s.open * 60;
-                    let diff = openSec - utcSec;
+                    let diff = openSec - nySec;
                     if (diff <= 0) diff += 24 * 3600;
                     if (diff < minDiffSec) {
                         minDiffSec = diff;
-                        nextName = s.label;
+                        nextLabel = s.label;
                     }
                 }
             });
 
-            if (nextName) {
-                cdEl.innerHTML = '<span>' + nextName + ':</span> ' + formatCountdownSec(minDiffSec);
+            if (nextLabel) {
+                cdEl.innerHTML = nextLabel + ': ' + formatCountdownSec(minDiffSec);
             } else {
-                cdEl.innerHTML = '<span>Overlap</span> LDN/NY';
+                cdEl.textContent = '--:--:--';
+            }
+
+            // NY OPEN — 09:30 NY = 9*3600 + 30*60 = 34200 sec
+            const nyOpenEl = document.getElementById(prefix + 'nyopen');
+            if (!nyOpenEl) return;
+            const NY_OPEN_SEC = 9 * 3600 + 30 * 60;
+            let diffOpen = NY_OPEN_SEC - nySec;
+            if (diffOpen < 0) diffOpen += 24 * 3600;
+
+            if (diffOpen === 0) {
+                nyOpenEl.innerHTML = '<span>NY OPEN</span> MAINTENANT !';
+                nyOpenEl.style.color = '#26a17b';
+                nyOpenEl.style.fontWeight = 'bold';
+            } else if (diffOpen <= 900) {
+                // Moins de 15min : gras rouge
+                nyOpenEl.innerHTML = '<b>NY OPEN</b> ' + formatCountdownSec(diffOpen);
+                nyOpenEl.style.color = '#e84142';
+                nyOpenEl.style.fontWeight = 'bold';
+            } else if (diffOpen <= 3600) {
+                // Moins d'1h : normal jaune
+                nyOpenEl.innerHTML = '<span>NY OPEN</span> ' + formatCountdownSec(diffOpen);
+                nyOpenEl.style.color = '#f0b90b';
+                nyOpenEl.style.fontWeight = 'normal';
+            } else {
+                nyOpenEl.innerHTML = '<span>NY OPEN</span> ' + formatCountdownSec(diffOpen);
+                nyOpenEl.style.color = '#f0b90b';
+                nyOpenEl.style.fontWeight = 'normal';
             }
         }
 
