@@ -196,7 +196,102 @@
             font-size: 0.9em;
         }
 
-        /* ── GRILLE WATCHLIST ── */
+        /* ── BOUTONS WATCHLIST EMPILES ── */
+        .btn-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        /* ── BARRE PERF ── */
+        .perf-bar {
+            display: none;
+            align-items: stretch;
+            gap: 0;
+            flex-grow: 1;
+            background: #181818;
+            border-radius: 6px;
+            border: 1px solid #2a2a2a;
+            overflow: hidden;
+        }
+
+        .perf-bar.open {
+            display: flex;
+        }
+
+        .perf-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 8px;
+            border-right: 1px solid #2a2a2a;
+            gap: 1px;
+        }
+
+        .perf-item:last-child {
+            border-right: none;
+        }
+
+        .perf-label {
+            font-size: 0.76em;
+            color: #666;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .perf-pct {
+            font-size: 1.02em;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .perf-pct.up {
+            color: #26a17b;
+        }
+
+        .perf-pct.down {
+            color: #e84142;
+        }
+
+        .perf-pct.flat {
+            color: #888;
+        }
+
+        .perf-price {
+            font-size: 0.85em;
+            color: #aaa;
+            font-family: 'Courier New', monospace;
+        }
+
+        .perf-hl {
+            font-size: 0.75em;
+            color: #555;
+            font-family: 'Courier New', monospace;
+            white-space: nowrap;
+        }
+
+        .perf-hl .hl-h {
+            color: #26a17b;
+        }
+
+        .perf-hl .hl-l {
+            color: #e84142;
+        }
+
+        .perf-update {
+            font-size: 0.70em;
+            color: #444;
+            text-align: right;
+            padding: 2px 8px 2px 0;
+            align-self: flex-end;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
         .grid-watchlist {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -522,10 +617,20 @@
             margin-right: 6px;
         }
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
             }
+
+            50% {
+                opacity: 0.2;
+            }
+        }
+
+        .blink {
+            animation: blink 1s ease-in-out infinite;
         }
     </style>
 </head>
@@ -540,16 +645,62 @@
         <div class="header-container">
             <div class="header-left">
                 <img src="logo2.png" alt="Logo 3Drives" class="header-logo">
-                <div class="ticker-wrapper">
+
+                <!-- Ticker (visible par défaut) -->
+                <div class="ticker-wrapper" id="ticker-wrapper">
                     <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-ticker-tape.js"></script>
                     <tv-ticker-tape
                         symbols="FOREXCOM:SPXUSD,FOREXCOM:NSXUSD,FX:EURUSD,BITSTAMP:BTCUSD,CMCMARKETS:GOLD,CAPITALCOM:OIL_BRENT,CAPITALCOM:DXY"
                         show-hover theme="dark" transparent></tv-ticker-tape>
                 </div>
+
+                <!-- Barre PERF (cachée par défaut) -->
+                <div class="perf-bar" id="perf-bar">
+                    <div class="perf-item" id="perf-nq">
+                        <span class="perf-label">NQ</span>
+                        <span class="perf-pct flat">--</span>
+                        <span class="perf-price">--</span>
+                        <span class="perf-hl">--</span>
+                    </div>
+                    <div class="perf-item" id="perf-gold">
+                        <span class="perf-label">Gold</span>
+                        <span class="perf-pct flat">--</span>
+                        <span class="perf-price">--</span>
+                        <span class="perf-hl">--</span>
+                    </div>
+                    <div class="perf-item" id="perf-btc">
+                        <span class="perf-label">BTC</span>
+                        <span class="perf-pct flat">--</span>
+                        <span class="perf-price">--</span>
+                        <span class="perf-hl">--</span>
+                    </div>
+                    <div class="perf-item" id="perf-sp500">
+                        <span class="perf-label">SP500</span>
+                        <span class="perf-pct flat">--</span>
+                        <span class="perf-price">--</span>
+                        <span class="perf-hl">--</span>
+                    </div>
+                    <div class="perf-item" id="perf-eurusd">
+                        <span class="perf-label">EURUSD</span>
+                        <span class="perf-pct flat">--</span>
+                        <span class="perf-price">--</span>
+                        <span class="perf-hl">--</span>
+                    </div>
+                    <div class="perf-item" id="perf-oil">
+                        <span class="perf-label">Oil</span>
+                        <span class="perf-pct flat">--</span>
+                        <span class="perf-price">--</span>
+                        <span class="perf-hl">--</span>
+                    </div>
+                    <span class="perf-update" id="perf-update">--</span>
+                </div>
             </div>
 
             <div class="header-right">
-                <button class="nav-btn" onclick="showPage('analyse')">Analyse</button>
+                <div class="btn-stack">
+                    <button class="nav-btn" id="btn-perf" onclick="togglePerf()">PERF</button>
+                    <button class="nav-btn" onclick="showPage('analyse')">Analyse</button>
+                </div>
                 <div class="clocks-sessions-block">
                     <div class="clocks-container">
                         <div class="clock-item">
@@ -1154,31 +1305,119 @@
                 cdEl.textContent = '--:--:--';
             }
 
-            // NY OPEN — 09:30 NY = 9*3600 + 30*60 = 34200 sec
+            // NY OPEN — actif de 09:30 à 16:01 NY
             const nyOpenEl = document.getElementById(prefix + 'nyopen');
             if (!nyOpenEl) return;
-            const NY_OPEN_SEC = 9 * 3600 + 30 * 60;
-            let diffOpen = NY_OPEN_SEC - nySec;
-            if (diffOpen < 0) diffOpen += 24 * 3600;
 
-            if (diffOpen === 0) {
-                nyOpenEl.innerHTML = '<span>NY OPEN</span> MAINTENANT !';
+            const NY_OPEN_SEC = 9 * 3600 + 30 * 60;       // 09:30
+            const NY_CLOSE_SEC = 16 * 3600 + 1 * 60;        // 16:01
+            const isMarketOpen = nySec >= NY_OPEN_SEC && nySec < NY_CLOSE_SEC;
+
+            if (isMarketOpen) {
+                nyOpenEl.innerHTML = '<b>NY OPEN</b>';
                 nyOpenEl.style.color = '#26a17b';
                 nyOpenEl.style.fontWeight = 'bold';
-            } else if (diffOpen <= 900) {
-                // Moins de 15min : gras rouge
-                nyOpenEl.innerHTML = '<b>NY OPEN</b> ' + formatCountdownSec(diffOpen);
-                nyOpenEl.style.color = '#e84142';
-                nyOpenEl.style.fontWeight = 'bold';
-            } else if (diffOpen <= 3600) {
-                // Moins d'1h : normal jaune
-                nyOpenEl.innerHTML = '<span>NY OPEN</span> ' + formatCountdownSec(diffOpen);
-                nyOpenEl.style.color = '#f0b90b';
-                nyOpenEl.style.fontWeight = 'normal';
+                nyOpenEl.classList.remove('blink');
             } else {
-                nyOpenEl.innerHTML = '<span>NY OPEN</span> ' + formatCountdownSec(diffOpen);
-                nyOpenEl.style.color = '#f0b90b';
-                nyOpenEl.style.fontWeight = 'normal';
+                let diffOpen = NY_OPEN_SEC - nySec;
+                if (diffOpen < 0) diffOpen += 24 * 3600;
+
+                if (diffOpen <= 900) {
+                    // Moins de 15min : rouge gras + clignotement
+                    nyOpenEl.innerHTML = '<b>NY OPEN</b> ' + formatCountdownSec(diffOpen);
+                    nyOpenEl.style.color = '#e84142';
+                    nyOpenEl.style.fontWeight = 'bold';
+                    nyOpenEl.classList.add('blink');
+                } else {
+                    // Plus de 15min : jaune normal, pas de clignotement
+                    nyOpenEl.innerHTML = '<span>NY OPEN</span> ' + formatCountdownSec(diffOpen);
+                    nyOpenEl.style.color = '#f0b90b';
+                    nyOpenEl.style.fontWeight = 'normal';
+                    nyOpenEl.classList.remove('blink');
+                }
+            }
+        }
+
+        /* ══════════════════════════════
+           PERF — TOGGLE + FINNHUB QUOTES
+        ══════════════════════════════ */
+
+        const PERF_ACTIFS = [
+            { key: 'nq', symbol: 'QQQ', label: 'NQ', decimals: 2 },
+            { key: 'gold', symbol: 'GLD', label: 'Gold', decimals: 2 },
+            { key: 'btc', symbol: 'BINANCE:BTCUSDT', label: 'BTC', decimals: 0 },
+            { key: 'sp500', symbol: 'SPY', label: 'SP500', decimals: 2 },
+            { key: 'eurusd', symbol: 'FX:EURUSD', label: 'EURUSD', decimals: 4 },
+            { key: 'oil', symbol: 'USO', label: 'Oil', decimals: 2 }
+        ];
+
+        let perfActive = false;
+        let perfTimer = null;
+
+        function togglePerf() {
+            const bar = document.getElementById('perf-bar');
+            const ticker = document.getElementById('ticker-wrapper');
+            const btn = document.getElementById('btn-perf');
+            perfActive = !perfActive;
+
+            if (perfActive) {
+                ticker.style.display = 'none';
+                bar.classList.add('open');
+                btn.classList.add('active-panel');
+                chargerPerf();
+                perfTimer = setInterval(chargerPerf, 30000);
+            } else {
+                ticker.style.display = '';
+                bar.classList.remove('open');
+                btn.classList.remove('active-panel');
+                clearInterval(perfTimer);
+            }
+        }
+
+        async function chargerPerf() {
+            try {
+                const promises = PERF_ACTIFS.map(a =>
+                    fetch('https://finnhub.io/api/v1/quote?symbol=' + encodeURIComponent(a.symbol) + '&token=' + FINNHUB_KEY)
+                        .then(r => r.ok ? r.json() : null)
+                        .catch(() => null)
+                );
+                const results = await Promise.all(promises);
+
+                PERF_ACTIFS.forEach((a, i) => {
+                    const d = results[i];
+                    const el = document.getElementById('perf-' + a.key);
+                    if (!el || !d || !d.c) return;
+
+                    const pct = d.dp !== undefined ? d.dp : ((d.c - d.pc) / d.pc * 100);
+                    const price = d.c;
+                    const high = d.h;
+                    const low = d.l;
+                    const dec = a.decimals;
+
+                    const pctEl = el.querySelector('.perf-pct');
+                    const priceEl = el.querySelector('.perf-price');
+                    const hlEl = el.querySelector('.perf-hl');
+
+                    // % variation
+                    const sign = pct > 0 ? '+' : '';
+                    pctEl.textContent = sign + pct.toFixed(2) + '%';
+                    pctEl.className = 'perf-pct ' + (pct > 0.05 ? 'up' : pct < -0.05 ? 'down' : 'flat');
+
+                    // Prix actuel
+                    priceEl.textContent = price.toLocaleString('fr-FR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+
+                    // High / Low
+                    hlEl.innerHTML = '<span class="hl-h">H ' + high.toFixed(dec) + '</span>'
+                        + ' <span class="hl-l">L ' + low.toFixed(dec) + '</span>';
+                });
+
+                // Timestamp MAJ
+                const now = new Date();
+                const heure = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' });
+                document.getElementById('perf-update').textContent = 'MAJ ' + heure + ' NY';
+
+            } catch (err) {
+                console.error('Perf error:', err);
             }
         }
 
