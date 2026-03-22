@@ -60,6 +60,7 @@
             border: 1px solid #f0b90b;
             color: #f0b90b;
             padding: 6px 16px;
+            height: 31px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 0.82em;
@@ -68,6 +69,8 @@
             letter-spacing: 1px;
             transition: background 0.2s, color 0.2s;
             white-space: nowrap;
+            display: flex;
+            align-items: center;
         }
 
         .nav-btn:hover,
@@ -152,10 +155,10 @@
 
         .session-countdown {
             font-size: 0.95em;
-            color: #e84142;
             font-family: 'Courier New', monospace;
             font-weight: bold;
             white-space: nowrap;
+            color: #e84142;
         }
 
         .session-nyopen {
@@ -750,9 +753,10 @@
     ════════════════════════════════ -->
     <div id="page-analyse" class="page">
 
-        <div class="header-container">
+        <div class="header-container" style="align-items: flex-end;">
             <div class="asset-selector" id="asset-selector">
-                <button class="asset-selector-btn" id="asset-selector-btn" onclick="toggleAssetDropdown()">
+                <div style="font-size:0.68em; color:#555; text-transform:uppercase; letter-spacing:1px; font-weight:bold; margin-bottom:5px;">Actif</div>
+                <button class="asset-selector-btn" id="asset-selector-btn" onclick="toggleAssetDropdown()" style="height:31px;">
                     <span id="asset-selected-label">US100</span>
                     <span class="arrow">&#9660;</span>
                 </button>
@@ -766,7 +770,7 @@
                 </div>
             </div>
 
-            <div class="header-right" style="margin-left: auto;">
+            <div class="header-right" style="margin-left: auto; align-items: flex-end;">
                 <button class="nav-btn" id="btn-news" onclick="toggleNews()">News</button>
                 <button class="nav-btn" id="btn-cal"  onclick="toggleCalendrier()">Cal-Eco</button>
                 <button class="nav-btn" onclick="showPage('watchlist')">&#9664; Watchlist</button>
@@ -1245,16 +1249,83 @@
             return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
         }
 
+        function getNYDayAndMinutes() {
+            const now = new Date();
+            const nyDay = now.toLocaleDateString('en-US', {
+                timeZone: 'America/New_York',
+                weekday: 'short'
+            }); // "Mon", "Tue", etc.
+            const nyMin = getNYTotalMinutes();
+            return { day: nyDay, nyMin };
+        }
+
+        function isWeekendMarket() {
+            const { day, nyMin } = getNYDayAndMinutes();
+            // Fermé : Vendredi >= 18:00  OU  Samedi (toute la journée)  OU  Dimanche < 18:00
+            if (day === 'Sat') return true;
+            if (day === 'Fri' && nyMin >= 18 * 60) return true;
+            if (day === 'Sun' && nyMin < 18 * 60) return true;
+            return false;
+        }
+
+        function getSecondsUntilMarketOpen() {
+            const now    = new Date();
+            const nySec  = getNYTotalSeconds();
+            const { day, nyMin } = getNYDayAndMinutes();
+
+            // Cible : Dimanche 18:00 NY = 18 * 3600
+            const targetSec = 18 * 3600;
+
+            let extraDays = 0;
+            if      (day === 'Fri') extraDays = 2; // Ven → Dim = 2 jours
+            else if (day === 'Sat') extraDays = 1; // Sam → Dim = 1 jour
+            else if (day === 'Sun') extraDays = 0; // Dim même jour
+
+            const diff = (extraDays * 86400) + (targetSec - nySec);
+            return diff > 0 ? diff : diff + 7 * 86400;
+        }
+
         function updateSessions(prefix) {
             const nyMin = getNYTotalMinutes();
             const nySec = getNYTotalSeconds();
+            const weekend = isWeekendMarket();
 
+            const cdEl     = document.getElementById(prefix + 'countdown');
+            const nyOpenEl = document.getElementById(prefix + 'nyopen');
+
+            if (weekend) {
+                // ── WEEKEND : tout en gris ──
+                SESSIONS.forEach(s => {
+                    const dot  = document.getElementById(prefix + 'dot-' + s.key);
+                    const name = document.getElementById(prefix + 'name-' + s.key);
+                    if (!dot || !name) return;
+                    dot.className  = 'session-dot closed';
+                    name.className = 'session-name closed';
+                });
+
+                // Countdown vers réouverture Dimanche 18:00
+                if (cdEl) {
+                    const diff = getSecondsUntilMarketOpen();
+                    cdEl.innerHTML = '<b>Open: ' + formatCountdownSec(diff) + '</b>';
+                    cdEl.style.color      = '#aaa';
+                    cdEl.style.fontWeight = 'bold';
+                }
+
+                // NY OPEN masqué
+                if (nyOpenEl) {
+                    nyOpenEl.innerHTML    = '';
+                    nyOpenEl.classList.remove('blink');
+                }
+
+                return;
+            }
+
+            // ── SEMAINE : comportement normal ──
             SESSIONS.forEach(s => {
                 const active = isSessionActive(s, nyMin);
                 const dot  = document.getElementById(prefix + 'dot-' + s.key);
                 const name = document.getElementById(prefix + 'name-' + s.key);
                 if (!dot || !name) return;
-
                 dot.className  = 'session-dot';
                 name.className = 'session-name';
                 dot.classList.add(active  ? 'active' : 'closed');
@@ -1262,56 +1333,45 @@
             });
 
             // Compte à rebours vers la prochaine session
-            const cdEl = document.getElementById(prefix + 'countdown');
-            if (!cdEl) return;
-
-            let minDiffSec = Infinity;
-            let nextLabel  = '';
-
-            SESSIONS.forEach(s => {
-                if (!isSessionActive(s, nyMin)) {
-                    const openSec = s.open * 60;
-                    let diff = openSec - nySec;
-                    if (diff <= 0) diff += 24 * 3600;
-                    if (diff < minDiffSec) {
-                        minDiffSec = diff;
-                        nextLabel  = s.label;
+            if (cdEl) {
+                let minDiffSec = Infinity;
+                let nextLabel  = '';
+                SESSIONS.forEach(s => {
+                    if (!isSessionActive(s, nyMin)) {
+                        const openSec = s.open * 60;
+                        let diff = openSec - nySec;
+                        if (diff <= 0) diff += 24 * 3600;
+                        if (diff < minDiffSec) {
+                            minDiffSec = diff;
+                            nextLabel  = s.label;
+                        }
                     }
-                }
-            });
-
-            if (nextLabel) {
-                cdEl.innerHTML = nextLabel + ': ' + formatCountdownSec(minDiffSec);
-            } else {
-                cdEl.textContent = '--:--:--';
+                });
+                cdEl.style.color = '#e84142';
+                cdEl.innerHTML = nextLabel ? nextLabel + ': ' + formatCountdownSec(minDiffSec) : '--:--:--';
             }
 
-            // NY OPEN — actif de 09:30 à 16:01 NY
-            const nyOpenEl = document.getElementById(prefix + 'nyopen');
+            // NY OPEN
             if (!nyOpenEl) return;
-
-            const NY_OPEN_SEC  = 9 * 3600 + 30 * 60;       // 09:30
-            const NY_CLOSE_SEC = 16 * 3600 + 1 * 60;        // 16:01
+            const NY_OPEN_SEC  = 9 * 3600 + 30 * 60;
+            const NY_CLOSE_SEC = 16 * 3600 + 1 * 60;
             const isMarketOpen = nySec >= NY_OPEN_SEC && nySec < NY_CLOSE_SEC;
 
             if (isMarketOpen) {
-                nyOpenEl.innerHTML    = '<b>NY OPEN</b>';
-                nyOpenEl.style.color  = '#26a17b';
+                nyOpenEl.innerHTML        = '<b>NY OPEN</b>';
+                nyOpenEl.style.color      = '#26a17b';
                 nyOpenEl.style.fontWeight = 'bold';
                 nyOpenEl.classList.remove('blink');
             } else {
                 let diffOpen = NY_OPEN_SEC - nySec;
                 if (diffOpen < 0) diffOpen += 24 * 3600;
-
                 if (diffOpen <= 900) {
-                    // Moins de 15min : rouge gras + clignotement
-                    nyOpenEl.innerHTML = '<b>NY OPEN</b> ' + formatCountdownSec(diffOpen);
+                    nyOpenEl.innerHTML        = '<b>NY OPEN</b> ' + formatCountdownSec(diffOpen);
                     nyOpenEl.style.color      = '#e84142';
                     nyOpenEl.style.fontWeight = 'bold';
                     nyOpenEl.classList.add('blink');
                 } else {
-                    // Plus de 15min : jaune normal, pas de clignotement
-                    nyOpenEl.innerHTML = '<span>NY OPEN</span> ' + formatCountdownSec(diffOpen);
+                    nyOpenEl.innerHTML        = '<span>NY OPEN</span> ' + formatCountdownSec(diffOpen);
                     nyOpenEl.style.color      = '#f0b90b';
                     nyOpenEl.style.fontWeight = 'normal';
                     nyOpenEl.classList.remove('blink');
@@ -1328,18 +1388,29 @@
         function toggleAssetDropdown() {
             const btn      = document.getElementById('asset-selector-btn');
             const dropdown = document.getElementById('asset-dropdown');
-            btn.classList.toggle('open');
-            dropdown.classList.toggle('open');
+            const isOpen   = dropdown.classList.contains('open');
+
+            if (isOpen) {
+                btn.classList.remove('open');
+                dropdown.classList.remove('open');
+            } else {
+                btn.classList.add('open');
+                dropdown.classList.add('open');
+                // Fermer si clic en dehors — ajouté après l'ouverture
+                setTimeout(() => {
+                    document.addEventListener('click', closeDropdownOutside);
+                }, 0);
+            }
         }
 
-        // Fermer le dropdown si clic ailleurs
-        document.addEventListener('click', function(e) {
+        function closeDropdownOutside(e) {
             const selector = document.getElementById('asset-selector');
             if (selector && !selector.contains(e.target)) {
                 document.getElementById('asset-selector-btn').classList.remove('open');
                 document.getElementById('asset-dropdown').classList.remove('open');
+                document.removeEventListener('click', closeDropdownOutside);
             }
-        });
+        }
 
         function selectAsset(symbol, label, el) {
             if (symbol === currentSymbol) {
