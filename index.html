@@ -44,9 +44,7 @@
         }
 
         /* ── TICKER ── */
-        .ticker-wrapper {
-            flex-grow: 1;
-        }
+        .ticker-wrapper { flex-grow: 1; }
 
         /* ── NAVIGATION + HORLOGES ── */
         .header-right {
@@ -93,9 +91,7 @@
             align-items: center;
         }
 
-        .clock-item {
-            text-align: center;
-        }
+        .clock-item { text-align: center; }
 
         .clock-label {
             font-size: 0.7em;
@@ -134,19 +130,9 @@
             transition: background 0.5s;
         }
 
-        .session-dot.active {
-            background: #26a17b;
-            box-shadow: 0 0 6px rgba(38, 161, 123, 0.7);
-        }
-
-        .session-dot.overlap {
-            background: #f0b90b;
-            box-shadow: 0 0 6px rgba(240, 185, 11, 0.7);
-        }
-
-        .session-dot.closed {
-            background: #333;
-        }
+        .session-dot.active  { background: #26a17b; box-shadow: 0 0 6px rgba(38,161,123,0.7); }
+        .session-dot.overlap { background: #f0b90b; box-shadow: 0 0 6px rgba(240,185,11,0.7); }
+        .session-dot.closed  { background: #333; }
 
         .session-name {
             font-size: 0.85em;
@@ -155,17 +141,9 @@
             letter-spacing: 0.5px;
         }
 
-        .session-name.active {
-            color: #26a17b;
-        }
-
-        .session-name.overlap {
-            color: #f0b90b;
-        }
-
-        .session-name.closed {
-            color: #444;
-        }
+        .session-name.active  { color: #26a17b; }
+        .session-name.overlap { color: #f0b90b; }
+        .session-name.closed  { color: #444; }
 
         .session-separator {
             color: #333;
@@ -216,9 +194,7 @@
             overflow: hidden;
         }
 
-        .perf-bar.open {
-            display: flex;
-        }
+        .perf-bar.open { display: flex; }
 
         .perf-item {
             flex: 1;
@@ -231,9 +207,7 @@
             gap: 1px;
         }
 
-        .perf-item:last-child {
-            border-right: none;
-        }
+        .perf-item:last-child { border-right: none; }
 
         .perf-label {
             font-size: 0.76em;
@@ -249,17 +223,9 @@
             font-family: 'Courier New', monospace;
         }
 
-        .perf-pct.up {
-            color: #26a17b;
-        }
-
-        .perf-pct.down {
-            color: #e84142;
-        }
-
-        .perf-pct.flat {
-            color: #888;
-        }
+        .perf-pct.up   { color: #26a17b; }
+        .perf-pct.down { color: #e84142; }
+        .perf-pct.flat { color: #888; }
 
         .perf-price {
             font-size: 0.85em;
@@ -274,13 +240,8 @@
             white-space: nowrap;
         }
 
-        .perf-hl .hl-h {
-            color: #26a17b;
-        }
-
-        .perf-hl .hl-l {
-            color: #e84142;
-        }
+        .perf-hl .hl-h { color: #26a17b; }
+        .perf-hl .hl-l { color: #e84142; }
 
         .perf-update {
             font-size: 0.70em;
@@ -291,7 +252,6 @@
             white-space: nowrap;
             flex-shrink: 0;
         }
-
         .grid-watchlist {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -305,6 +265,85 @@
             gap: 15px;
             flex-grow: 1;
         }
+
+        /* ── MENU DEROULANT ACTIF ── */
+        .asset-selector {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .asset-selector-btn {
+            background: transparent;
+            border: 1px solid #f0b90b;
+            color: #f0b90b;
+            padding: 6px 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.82em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background 0.2s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .asset-selector-btn:hover { background: #f0b90b22; }
+
+        .asset-selector-btn .arrow {
+            font-size: 0.7em;
+            transition: transform 0.2s;
+        }
+
+        .asset-selector-btn.open .arrow { transform: rotate(180deg); }
+
+        .asset-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 6px;
+            overflow: hidden;
+            z-index: 999;
+            min-width: 150px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+
+        .asset-dropdown.open { display: block; }
+
+        .asset-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px;
+            cursor: pointer;
+            font-size: 0.82em;
+            font-weight: bold;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background 0.15s, color 0.15s;
+            white-space: nowrap;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .asset-option:last-child { border-bottom: none; }
+        .asset-option:hover { background: #2a2a2a; color: #ccc; }
+        .asset-option.selected { color: #f0b90b; }
+
+        .asset-option .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: transparent;
+            flex-shrink: 0;
+        }
+
+        .asset-option.selected .dot { background: #f0b90b; }
 
         /* ── GRILLE ANALYSE 2x2 ── */
         .grid-analyse {
@@ -346,9 +385,7 @@
             flex-grow: 1;
         }
 
-        .page.active {
-            display: flex;
-        }
+        .page.active { display: flex; }
 
         /* ══════════════════════════════════════
            PANNEAU GENERIQUE (Cal-Eco + News)
@@ -367,9 +404,7 @@
             box-sizing: border-box;
         }
 
-        .side-panel.open {
-            display: flex;
-        }
+        .side-panel.open { display: flex; }
 
         /* ── EN-TETE PANNEAU ── */
         .panel-header {
@@ -382,9 +417,7 @@
             gap: 10px;
         }
 
-        .panel-title-block {
-            flex-shrink: 0;
-        }
+        .panel-title-block { flex-shrink: 0; }
 
         .panel-title {
             font-size: 1.1em;
@@ -413,10 +446,7 @@
             flex-shrink: 0;
         }
 
-        .refresh-btn:hover {
-            border-color: #f0b90b;
-            color: #f0b90b;
-        }
+        .refresh-btn:hover { border-color: #f0b90b; color: #f0b90b; }
 
         /* ══════════════════════════════
            CALENDRIER
@@ -459,10 +489,7 @@
             white-space: nowrap;
         }
 
-        .filter-btn:hover {
-            border-color: #666;
-            color: #ccc;
-        }
+        .filter-btn:hover { border-color: #666; color: #ccc; }
 
         .filter-btn.active {
             color: #121212;
@@ -470,42 +497,16 @@
         }
 
         /* Couleurs par actif */
-        .filter-btn.f-all.active {
-            background: #f0b90b;
-        }
-
-        .filter-btn.f-nq.active {
-            background: #4a9eff;
-        }
-
-        .filter-btn.f-gold.active {
-            background: #FFD700;
-            color: #333;
-        }
-
-        .filter-btn.f-btc.active {
-            background: #F7931A;
-        }
-
-        .filter-btn.f-sp500.active {
-            background: #26a17b;
-        }
-
-        .filter-btn.f-eur.active {
-            background: #a78bfa;
-        }
-
-        .filter-btn.f-oil.active {
-            background: #94a3b8;
-            color: #333;
-        }
+        .filter-btn.f-all.active    { background: #f0b90b; }
+        .filter-btn.f-nq.active     { background: #4a9eff; }
+        .filter-btn.f-gold.active   { background: #FFD700; color: #333; }
+        .filter-btn.f-btc.active    { background: #F7931A; }
+        .filter-btn.f-sp500.active  { background: #26a17b; }
+        .filter-btn.f-eur.active    { background: #a78bfa; }
+        .filter-btn.f-oil.active    { background: #94a3b8; color: #333; }
 
         /* ── CARTE NEWS ── */
-        .news-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+        .news-list { display: flex; flex-direction: column; gap: 8px; }
 
         .news-card {
             background: #181818;
@@ -541,35 +542,12 @@
             flex-shrink: 0;
         }
 
-        .badge-nq {
-            background: #1a3a5c;
-            color: #4a9eff;
-        }
-
-        .badge-gold {
-            background: #3a3000;
-            color: #FFD700;
-        }
-
-        .badge-btc {
-            background: #3a2000;
-            color: #F7931A;
-        }
-
-        .badge-sp500 {
-            background: #0d2e22;
-            color: #26a17b;
-        }
-
-        .badge-eur {
-            background: #2d1f4e;
-            color: #a78bfa;
-        }
-
-        .badge-oil {
-            background: #1e2530;
-            color: #94a3b8;
-        }
+        .badge-nq    { background: #1a3a5c; color: #4a9eff; }
+        .badge-gold  { background: #3a3000; color: #FFD700; }
+        .badge-btc   { background: #3a2000; color: #F7931A; }
+        .badge-sp500 { background: #0d2e22; color: #26a17b; }
+        .badge-eur   { background: #2d1f4e; color: #a78bfa; }
+        .badge-oil   { background: #1e2530; color: #94a3b8; }
 
         .news-meta {
             font-size: 0.72em;
@@ -600,9 +578,7 @@
             line-height: 1.6;
         }
 
-        .panel-status.error {
-            color: #e84142;
-        }
+        .panel-status.error { color: #e84142; }
 
         /* ── SPINNER ── */
         .spinner {
@@ -618,20 +594,11 @@
         }
 
         @keyframes blink {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.2;
-            }
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.2; }
         }
 
-        .blink {
-            animation: blink 1s ease-in-out infinite;
-        }
+        .blink { animation: blink 1s ease-in-out infinite; }
     </style>
 </head>
 
@@ -784,9 +751,24 @@
     <div id="page-analyse" class="page">
 
         <div class="header-container">
+            <div class="asset-selector" id="asset-selector">
+                <button class="asset-selector-btn" id="asset-selector-btn" onclick="toggleAssetDropdown()">
+                    <span id="asset-selected-label">US100</span>
+                    <span class="arrow">&#9660;</span>
+                </button>
+                <div class="asset-dropdown" id="asset-dropdown">
+                    <div class="asset-option selected" onclick="selectAsset('CAPITALCOM:US100', 'US100', this)"><span class="dot"></span>US100</div>
+                    <div class="asset-option" onclick="selectAsset('OANDA:XAUUSD', 'Gold', this)"><span class="dot"></span>Gold</div>
+                    <div class="asset-option" onclick="selectAsset('COINBASE:BTCUSD', 'BTC', this)"><span class="dot"></span>BTC</div>
+                    <div class="asset-option" onclick="selectAsset('CAPITALCOM:US500', 'SP500', this)"><span class="dot"></span>SP500</div>
+                    <div class="asset-option" onclick="selectAsset('CAPITALCOM:EURUSD', 'EURUSD', this)"><span class="dot"></span>EURUSD</div>
+                    <div class="asset-option" onclick="selectAsset('CAPITALCOM:OIL_BRENT', 'Oil', this)"><span class="dot"></span>Oil</div>
+                </div>
+            </div>
+
             <div class="header-right" style="margin-left: auto;">
                 <button class="nav-btn" id="btn-news" onclick="toggleNews()">News</button>
-                <button class="nav-btn" id="btn-cal" onclick="toggleCalendrier()">Cal-Eco</button>
+                <button class="nav-btn" id="btn-cal"  onclick="toggleCalendrier()">Cal-Eco</button>
                 <button class="nav-btn" onclick="showPage('watchlist')">&#9664; Watchlist</button>
                 <div class="clocks-sessions-block">
                     <div class="clocks-container">
@@ -840,19 +822,19 @@
             <!-- Charts 2x2 -->
             <div class="grid-analyse">
                 <div class="chart-card">
-                    <h3>US100 — Weekly</h3>
+                    <h3 id="title_nq_w">US100 — Weekly</h3>
                     <div id="chart_nq_w" class="tv-container"></div>
                 </div>
                 <div class="chart-card">
-                    <h3>US100 — Daily</h3>
+                    <h3 id="title_nq_d">US100 — Daily</h3>
                     <div id="chart_nq_d" class="tv-container"></div>
                 </div>
                 <div class="chart-card">
-                    <h3>US100 — H4</h3>
+                    <h3 id="title_nq_h4">US100 — H4</h3>
                     <div id="chart_nq_h4" class="tv-container"></div>
                 </div>
                 <div class="chart-card">
-                    <h3>US100 — H1</h3>
+                    <h3 id="title_nq_h1">US100 — H1</h3>
                     <div id="chart_nq_h1" class="tv-container"></div>
                 </div>
             </div>
@@ -868,19 +850,18 @@
                 <div id="cal-content" style="flex-grow:1; min-height:0;">
                     <div class="tradingview-widget-container" style="height:100%; min-height:500px;">
                         <div class="tradingview-widget-container__widget" style="height:100%;"></div>
-                        <script type="text/javascript"
-                            src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
-                                {
-                                    "colorTheme": "dark",
-                                        "isTransparent": true,
-                                            "width": "100%",
-                                                "height": "100%",
-                                                    "locale": "fr",
-                                                        "importanceFilter": "3",
-                                                            "currencyFilter": "USD",
-                                                                "timezone": "America/New_York"
-                                }
-                            </script>
+                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+                        {
+                            "colorTheme": "dark",
+                            "isTransparent": true,
+                            "width": "100%",
+                            "height": "100%",
+                            "locale": "fr",
+                            "importanceFilter": "3",
+                            "currencyFilter": "USD",
+                            "timezone": "America/New_York"
+                        }
+                        </script>
                     </div>
                 </div>
             </div>
@@ -898,12 +879,12 @@
                 <!-- Filtres par actif -->
                 <div class="news-filters">
                     <button class="filter-btn f-all active" onclick="filterNews('all', this)">Tous</button>
-                    <button class="filter-btn f-nq" onclick="filterNews('nq', this)">NQ</button>
-                    <button class="filter-btn f-gold" onclick="filterNews('gold', this)">Gold</button>
-                    <button class="filter-btn f-btc" onclick="filterNews('btc', this)">BTC</button>
+                    <button class="filter-btn f-nq"    onclick="filterNews('nq', this)">NQ</button>
+                    <button class="filter-btn f-gold"  onclick="filterNews('gold', this)">Gold</button>
+                    <button class="filter-btn f-btc"   onclick="filterNews('btc', this)">BTC</button>
                     <button class="filter-btn f-sp500" onclick="filterNews('sp500', this)">SP500</button>
-                    <button class="filter-btn f-eur" onclick="filterNews('eur', this)">EUR</button>
-                    <button class="filter-btn f-oil" onclick="filterNews('oil', this)">Oil</button>
+                    <button class="filter-btn f-eur"   onclick="filterNews('eur', this)">EUR</button>
+                    <button class="filter-btn f-oil"   onclick="filterNews('oil', this)">Oil</button>
                 </div>
 
                 <div id="news-content">
@@ -931,13 +912,13 @@
             const opt = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
             const fmt = (tz) => new Date().toLocaleTimeString('fr-FR', { ...opt, timeZone: tz });
 
-            document.getElementById('w-ny-time').textContent = fmt('America/New_York');
-            document.getElementById('w-utc-time').textContent = fmt('UTC');
+            document.getElementById('w-ny-time').textContent    = fmt('America/New_York');
+            document.getElementById('w-utc-time').textContent   = fmt('UTC');
             document.getElementById('w-paris-time').textContent = fmt('Europe/Paris');
             document.getElementById('w-tokyo-time').textContent = fmt('Asia/Tokyo');
 
-            document.getElementById('a-ny-time').textContent = fmt('America/New_York');
-            document.getElementById('a-utc-time').textContent = fmt('UTC');
+            document.getElementById('a-ny-time').textContent    = fmt('America/New_York');
+            document.getElementById('a-utc-time').textContent   = fmt('UTC');
             document.getElementById('a-paris-time').textContent = fmt('Europe/Paris');
             document.getElementById('a-tokyo-time').textContent = fmt('Asia/Tokyo');
 
@@ -977,8 +958,8 @@
 
             if (page === 'analyse' && !chartsCreated.analyse) {
                 chartsCreated.analyse = true;
-                createChart("chart_nq_w", "CAPITALCOM:US100", "W");
-                createChart("chart_nq_d", "CAPITALCOM:US100", "D");
+                createChart("chart_nq_w",  "CAPITALCOM:US100", "W");
+                createChart("chart_nq_d",  "CAPITALCOM:US100", "D");
                 createChart("chart_nq_h4", "CAPITALCOM:US100", "240");
                 new TradingView.widget({
                     "autosize": true,
@@ -1003,8 +984,8 @@
         let calLoaded = false;
 
         function toggleCalendrier() {
-            const panel = document.getElementById('cal-panel');
-            const btn = document.getElementById('btn-cal');
+            const panel  = document.getElementById('cal-panel');
+            const btn    = document.getElementById('btn-cal');
             const isOpen = panel.classList.contains('open');
 
             // Fermer News si ouvert
@@ -1024,7 +1005,7 @@
         }
 
         function afficherEnteteCalendrier() {
-            const now = new Date();
+            const now  = new Date();
             const jour = now.getDay();
             const diff = (jour === 0) ? -6 : 1 - jour;
             const lundi = new Date(now);
@@ -1039,21 +1020,21 @@
             const wNum = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
 
             const fmt = (d) => d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-            document.getElementById('cal-week-num').textContent = 'W' + wNum;
+            document.getElementById('cal-week-num').textContent   = 'W' + wNum;
             document.getElementById('cal-week-range').textContent = 'Semaine du ' + fmt(lundi) + ' au ' + fmt(dimanche);
         }
 
         /* ══════════════════════════════
            TOGGLE NEWS
         ══════════════════════════════ */
-        let newsLoaded = false;
-        let allNewsData = [];   // toutes les news brutes
+        let newsLoaded   = false;
+        let allNewsData  = [];   // toutes les news brutes
         let activeFilter = 'all';
         let newsRefreshTimer = null;
 
         function toggleNews() {
-            const panel = document.getElementById('news-panel');
-            const btn = document.getElementById('btn-news');
+            const panel  = document.getElementById('news-panel');
+            const btn    = document.getElementById('btn-news');
             const isOpen = panel.classList.contains('open');
 
             // Fermer Cal-Eco si ouvert
@@ -1097,12 +1078,12 @@
 
         // Config des actifs : endpoint Finnhub + label + badge CSS
         const ACTIFS = [
-            { key: 'nq', label: 'NQ', badge: 'badge-nq', type: 'category', cat: 'general', keywords: ['nasdaq', 'us100', 'ndx', 'tech', 's&p'] },
-            { key: 'gold', label: 'Gold', badge: 'badge-gold', type: 'category', cat: 'general', keywords: ['gold', 'xau', 'bullion', 'precious metal'] },
-            { key: 'btc', label: 'BTC', badge: 'badge-btc', type: 'category', cat: 'crypto', keywords: ['bitcoin', 'btc', 'crypto'] },
-            { key: 'sp500', label: 'SP500', badge: 'badge-sp500', type: 'category', cat: 'general', keywords: ['s&p 500', 'sp500', 'spx', 's&p500'] },
-            { key: 'eur', label: 'EUR', badge: 'badge-eur', type: 'category', cat: 'forex', keywords: ['euro', 'eurusd', 'eur/usd', 'eur usd', 'ecb', 'european'] },
-            { key: 'oil', label: 'Oil', badge: 'badge-oil', type: 'category', cat: 'general', keywords: ['oil', 'brent', 'crude', 'opec', 'wti', 'petroleum'] }
+            { key: 'nq',    label: 'NQ',    badge: 'badge-nq',    type: 'category', cat: 'general',  keywords: ['nasdaq','us100','ndx','tech','s&p'] },
+            { key: 'gold',  label: 'Gold',  badge: 'badge-gold',  type: 'category', cat: 'general',  keywords: ['gold','xau','bullion','precious metal'] },
+            { key: 'btc',   label: 'BTC',   badge: 'badge-btc',   type: 'category', cat: 'crypto',   keywords: ['bitcoin','btc','crypto'] },
+            { key: 'sp500', label: 'SP500', badge: 'badge-sp500', type: 'category', cat: 'general',  keywords: ['s&p 500','sp500','spx','s&p500'] },
+            { key: 'eur',   label: 'EUR',   badge: 'badge-eur',   type: 'category', cat: 'forex',    keywords: ['euro','eurusd','eur/usd','eur usd','ecb','european'] },
+            { key: 'oil',   label: 'Oil',   badge: 'badge-oil',   type: 'category', cat: 'general',  keywords: ['oil','brent','crude','opec','wti','petroleum'] }
         ];
 
         async function chargerNews() {
@@ -1119,7 +1100,7 @@
                 );
 
                 const results = await Promise.all(promises);
-                const rawAll = results.flat();
+                const rawAll  = results.flat();
 
                 // Déduplication par ID ou headline
                 const seen = new Set();
@@ -1189,10 +1170,10 @@
             let html = '<div class="news-list">';
 
             filtered.forEach(n => {
-                const ts = new Date(n.datetime * 1000);
+                const ts   = new Date(n.datetime * 1000);
                 const jours = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
                 const dateCourt = jours[ts.getDay()] + ' ' + ts.getDate();
-                const heureNY = ts.toLocaleTimeString('fr-FR', {
+                const heureNY   = ts.toLocaleTimeString('fr-FR', {
                     hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/New_York'
                 });
 
@@ -1202,14 +1183,14 @@
                     return '<span class="asset-badge ' + actif.badge + '">' + actif.label + '</span>';
                 }).join('');
 
-                const source = n.source || '';
-                const titre = (n.headline || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                const url = n.url || '#';
+                const source  = n.source || '';
+                const titre   = (n.headline || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                const url     = n.url || '#';
 
                 html += '<a class="news-card" href="' + url + '" target="_blank" rel="noopener">'
                     + '<div class="news-card-top">'
-                    + badges
-                    + '<span class="news-meta">' + dateCourt + ' &nbsp;|&nbsp; ' + heureNY + ' NY</span>'
+                    +   badges
+                    +   '<span class="news-meta">' + dateCourt + ' &nbsp;|&nbsp; ' + heureNY + ' NY</span>'
                     + '</div>'
                     + '<div class="news-title">' + titre + '</div>'
                     + (source ? '<div class="news-source">&#9642; ' + source + '</div>' : '')
@@ -1226,10 +1207,10 @@
 
         // Créneaux en heure New York (minutes depuis minuit NY)
         const SESSIONS = [
-            { key: 'c1', label: 'C1', open: 18 * 60, close: 24 * 60 },  // 18:00 - 23:59 NY
-            { key: 'c2', label: 'C2', open: 0 * 60, close: 6 * 60 },  // 00:00 - 05:59 NY
-            { key: 'c3', label: 'C3', open: 6 * 60, close: 12 * 60 },  // 06:00 - 11:59 NY
-            { key: 'c4', label: 'C4', open: 12 * 60, close: 18 * 60 }   // 12:00 - 17:59 NY
+            { key: 'c1', label: 'C1', open: 18*60, close: 24*60 },  // 18:00 - 23:59 NY
+            { key: 'c2', label: 'C2', open:  0*60, close:  6*60 },  // 00:00 - 05:59 NY
+            { key: 'c3', label: 'C3', open:  6*60, close: 12*60 },  // 06:00 - 11:59 NY
+            { key: 'c4', label: 'C4', open: 12*60, close: 18*60 }   // 12:00 - 17:59 NY
         ];
 
         function getNYTotalSeconds() {
@@ -1261,7 +1242,7 @@
             const h = Math.floor(totalSeconds / 3600);
             const m = Math.floor((totalSeconds % 3600) / 60);
             const s = totalSeconds % 60;
-            return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+            return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
         }
 
         function updateSessions(prefix) {
@@ -1270,13 +1251,13 @@
 
             SESSIONS.forEach(s => {
                 const active = isSessionActive(s, nyMin);
-                const dot = document.getElementById(prefix + 'dot-' + s.key);
+                const dot  = document.getElementById(prefix + 'dot-' + s.key);
                 const name = document.getElementById(prefix + 'name-' + s.key);
                 if (!dot || !name) return;
 
-                dot.className = 'session-dot';
+                dot.className  = 'session-dot';
                 name.className = 'session-name';
-                dot.classList.add(active ? 'active' : 'closed');
+                dot.classList.add(active  ? 'active' : 'closed');
                 name.classList.add(active ? 'active' : 'closed');
             });
 
@@ -1285,7 +1266,7 @@
             if (!cdEl) return;
 
             let minDiffSec = Infinity;
-            let nextLabel = '';
+            let nextLabel  = '';
 
             SESSIONS.forEach(s => {
                 if (!isSessionActive(s, nyMin)) {
@@ -1294,7 +1275,7 @@
                     if (diff <= 0) diff += 24 * 3600;
                     if (diff < minDiffSec) {
                         minDiffSec = diff;
-                        nextLabel = s.label;
+                        nextLabel  = s.label;
                     }
                 }
             });
@@ -1309,13 +1290,13 @@
             const nyOpenEl = document.getElementById(prefix + 'nyopen');
             if (!nyOpenEl) return;
 
-            const NY_OPEN_SEC = 9 * 3600 + 30 * 60;       // 09:30
+            const NY_OPEN_SEC  = 9 * 3600 + 30 * 60;       // 09:30
             const NY_CLOSE_SEC = 16 * 3600 + 1 * 60;        // 16:01
             const isMarketOpen = nySec >= NY_OPEN_SEC && nySec < NY_CLOSE_SEC;
 
             if (isMarketOpen) {
-                nyOpenEl.innerHTML = '<b>NY OPEN</b>';
-                nyOpenEl.style.color = '#26a17b';
+                nyOpenEl.innerHTML    = '<b>NY OPEN</b>';
+                nyOpenEl.style.color  = '#26a17b';
                 nyOpenEl.style.fontWeight = 'bold';
                 nyOpenEl.classList.remove('blink');
             } else {
@@ -1325,13 +1306,13 @@
                 if (diffOpen <= 900) {
                     // Moins de 15min : rouge gras + clignotement
                     nyOpenEl.innerHTML = '<b>NY OPEN</b> ' + formatCountdownSec(diffOpen);
-                    nyOpenEl.style.color = '#e84142';
+                    nyOpenEl.style.color      = '#e84142';
                     nyOpenEl.style.fontWeight = 'bold';
                     nyOpenEl.classList.add('blink');
                 } else {
                     // Plus de 15min : jaune normal, pas de clignotement
                     nyOpenEl.innerHTML = '<span>NY OPEN</span> ' + formatCountdownSec(diffOpen);
-                    nyOpenEl.style.color = '#f0b90b';
+                    nyOpenEl.style.color      = '#f0b90b';
                     nyOpenEl.style.fontWeight = 'normal';
                     nyOpenEl.classList.remove('blink');
                 }
@@ -1339,26 +1320,111 @@
         }
 
         /* ══════════════════════════════
+           SELECTEUR D'ACTIF — ANALYSE
+        ══════════════════════════════ */
+        let currentSymbol = 'CAPITALCOM:US100';
+        let currentLabel  = 'US100';
+
+        function toggleAssetDropdown() {
+            const btn      = document.getElementById('asset-selector-btn');
+            const dropdown = document.getElementById('asset-dropdown');
+            btn.classList.toggle('open');
+            dropdown.classList.toggle('open');
+        }
+
+        // Fermer le dropdown si clic ailleurs
+        document.addEventListener('click', function(e) {
+            const selector = document.getElementById('asset-selector');
+            if (selector && !selector.contains(e.target)) {
+                document.getElementById('asset-selector-btn').classList.remove('open');
+                document.getElementById('asset-dropdown').classList.remove('open');
+            }
+        });
+
+        function selectAsset(symbol, label, el) {
+            if (symbol === currentSymbol) {
+                toggleAssetDropdown();
+                return;
+            }
+
+            currentSymbol = symbol;
+            currentLabel  = label;
+
+            // Mise à jour du bouton
+            document.getElementById('asset-selected-label').textContent = label;
+
+            // Mise à jour des options sélectionnées
+            document.querySelectorAll('.asset-option').forEach(o => o.classList.remove('selected'));
+            document.querySelectorAll('.asset-option .dot').forEach(d => d.style.background = 'transparent');
+            el.classList.add('selected');
+            el.querySelector('.dot').style.background = '#f0b90b';
+
+            // Fermer le dropdown
+            document.getElementById('asset-selector-btn').classList.remove('open');
+            document.getElementById('asset-dropdown').classList.remove('open');
+
+            // Mise à jour des titres
+            document.getElementById('title_nq_w').textContent  = label + ' — Weekly';
+            document.getElementById('title_nq_d').textContent  = label + ' — Daily';
+            document.getElementById('title_nq_h4').textContent = label + ' — H4';
+            document.getElementById('title_nq_h1').textContent = label + ' — H1';
+
+            // Rechargement des charts
+            rechargerChartsAnalyse(symbol);
+        }
+
+        function rechargerChartsAnalyse(symbol) {
+            // Vider et recréer chaque conteneur
+            const charts = [
+                { id: 'chart_nq_w',  interval: 'W'   },
+                { id: 'chart_nq_d',  interval: 'D'   },
+                { id: 'chart_nq_h4', interval: '240' },
+                { id: 'chart_nq_h1', interval: '60'  }
+            ];
+
+            charts.forEach((c, i) => {
+                const el = document.getElementById(c.id);
+                el.innerHTML = '';
+
+                const isH1 = c.id === 'chart_nq_h1';
+                new TradingView.widget({
+                    "autosize": true,
+                    "symbol": symbol,
+                    "interval": c.interval,
+                    "timezone": "America/New_York",
+                    "theme": "dark",
+                    "style": "1",
+                    "locale": "fr",
+                    "hide_top_toolbar": !isH1,
+                    "hide_legend": false,
+                    "container_id": c.id,
+                    "hide_volume": true,
+                    ...(isH1 ? { "drawings_access": { "type": "all" } } : {})
+                });
+            });
+        }
+
+        /* ══════════════════════════════
            PERF — TOGGLE + FINNHUB QUOTES
         ══════════════════════════════ */
 
         const PERF_ACTIFS = [
-            { key: 'nq', symbol: 'QQQ', label: 'NQ', decimals: 2 },
-            { key: 'gold', symbol: 'GLD', label: 'Gold', decimals: 2 },
-            { key: 'btc', symbol: 'BINANCE:BTCUSDT', label: 'BTC', decimals: 0 },
-            { key: 'sp500', symbol: 'SPY', label: 'SP500', decimals: 2 },
-            { key: 'eurusd', symbol: 'FX:EURUSD', label: 'EURUSD', decimals: 4 },
-            { key: 'oil', symbol: 'USO', label: 'Oil', decimals: 2 }
+            { key: 'nq',     symbol: 'QQQ',              label: 'NQ',     decimals: 2 },
+            { key: 'gold',   symbol: 'GLD',               label: 'Gold',   decimals: 2 },
+            { key: 'btc',    symbol: 'BINANCE:BTCUSDT',   label: 'BTC',    decimals: 0 },
+            { key: 'sp500',  symbol: 'SPY',                label: 'SP500',  decimals: 2 },
+            { key: 'eurusd', symbol: 'FX:EURUSD',          label: 'EURUSD', decimals: 4 },
+            { key: 'oil',    symbol: 'USO',                label: 'Oil',    decimals: 2 }
         ];
 
-        let perfActive = false;
-        let perfTimer = null;
+        let perfActive  = false;
+        let perfTimer   = null;
 
         function togglePerf() {
-            const bar = document.getElementById('perf-bar');
+            const bar    = document.getElementById('perf-bar');
             const ticker = document.getElementById('ticker-wrapper');
-            const btn = document.getElementById('btn-perf');
-            perfActive = !perfActive;
+            const btn    = document.getElementById('btn-perf');
+            perfActive   = !perfActive;
 
             if (perfActive) {
                 ticker.style.display = 'none';
@@ -1384,31 +1450,31 @@
                 const results = await Promise.all(promises);
 
                 PERF_ACTIFS.forEach((a, i) => {
-                    const d = results[i];
-                    const el = document.getElementById('perf-' + a.key);
+                    const d   = results[i];
+                    const el  = document.getElementById('perf-' + a.key);
                     if (!el || !d || !d.c) return;
 
-                    const pct = d.dp !== undefined ? d.dp : ((d.c - d.pc) / d.pc * 100);
-                    const price = d.c;
-                    const high = d.h;
-                    const low = d.l;
-                    const dec = a.decimals;
+                    const pct    = d.dp !== undefined ? d.dp : ((d.c - d.pc) / d.pc * 100);
+                    const price  = d.c;
+                    const high   = d.h;
+                    const low    = d.l;
+                    const dec    = a.decimals;
 
-                    const pctEl = el.querySelector('.perf-pct');
+                    const pctEl   = el.querySelector('.perf-pct');
                     const priceEl = el.querySelector('.perf-price');
-                    const hlEl = el.querySelector('.perf-hl');
+                    const hlEl    = el.querySelector('.perf-hl');
 
                     // % variation
                     const sign = pct > 0 ? '+' : '';
-                    pctEl.textContent = sign + pct.toFixed(2) + '%';
-                    pctEl.className = 'perf-pct ' + (pct > 0.05 ? 'up' : pct < -0.05 ? 'down' : 'flat');
+                    pctEl.textContent  = sign + pct.toFixed(2) + '%';
+                    pctEl.className    = 'perf-pct ' + (pct > 0.05 ? 'up' : pct < -0.05 ? 'down' : 'flat');
 
                     // Prix actuel
                     priceEl.textContent = price.toLocaleString('fr-FR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
 
                     // High / Low
                     hlEl.innerHTML = '<span class="hl-h">H ' + high.toFixed(dec) + '</span>'
-                        + ' <span class="hl-l">L ' + low.toFixed(dec) + '</span>';
+                                   + ' <span class="hl-l">L ' + low.toFixed(dec) + '</span>';
                 });
 
                 // Timestamp MAJ
@@ -1429,15 +1495,14 @@
             setInterval(updateClocks, 1000);
 
             chartsCreated.watchlist = true;
-            createChart("chart_nq", "CAPITALCOM:US100", "15");
-            createChart("chart_gold", "OANDA:XAUUSD", "15");
-            createChart("chart_btc", "COINBASE:BTCUSD", "15");
-            createChart("chart_sp500", "CAPITALCOM:US500", "15");
-            createChart("chart_eurusd", "CAPITALCOM:EURUSD", "15");
-            createChart("chart_oil", "CAPITALCOM:OIL_BRENT", "15");
+            createChart("chart_nq",     "CAPITALCOM:US100",     "15");
+            createChart("chart_gold",   "OANDA:XAUUSD",         "15");
+            createChart("chart_btc",    "COINBASE:BTCUSD",      "15");
+            createChart("chart_sp500",  "CAPITALCOM:US500",     "15");
+            createChart("chart_eurusd", "CAPITALCOM:EURUSD",    "15");
+            createChart("chart_oil",    "CAPITALCOM:OIL_BRENT", "15");
         };
     </script>
 
 </body>
-
 </html>
